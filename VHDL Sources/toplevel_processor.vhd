@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: 		Tobias Markus
 -- 
 -- Create Date:    13:10:47 08/08/2013 
 -- Design Name: 
 -- Module Name:    toplevel_processor - Behavioral 
--- Project Name: 
+-- Project Name: 	
 -- Target Devices: 
 -- Tool versions: 
 -- Description: 
@@ -94,7 +94,8 @@ component instr_dec is
 		db_WR						: out std_logic;
 		db_RD						: out std_logic;
 		ALU_MODE					: out std_logic_vector(2 downto 0); 
-		OUTPUT_ALU1				: in std_logic_vector(31 downto 0)
+		OUTPUT_ALU1				: in std_logic_vector(31 downto 0);
+		rf_SREG_OUT				: in std_logic_vector(2 downto 0)
 	);
 end component;
 
@@ -204,7 +205,8 @@ begin
 		db_WR 					=> WR,
 		db_RD 					=> RD,
 		ALU_MODE 				=> alu_mode_int, 
-		OUTPUT_ALU1				=> output_alu1_int
+		OUTPUT_ALU1				=> output_alu1_int,
+		rf_SREG_OUT				=> rf_sreg_out_int
 	);
 	
 	Inst_reg_file: reg_file 

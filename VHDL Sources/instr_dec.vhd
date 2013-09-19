@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: 		Tobias Markus
 -- 
 -- Create Date:    12:52:58 08/08/2013 
 -- Design Name: 
@@ -22,7 +22,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -56,7 +56,8 @@ entity instr_dec is
 		db_WR						: out std_logic;
 		db_RD						: out std_logic;
 		ALU_MODE					: out std_logic_vector(2 downto 0); 
-		OUTPUT_ALU1				: in std_logic_vector(31 downto 0)
+		OUTPUT_ALU1				: in std_logic_vector(31 downto 0);
+		rf_SREG_OUT				: in std_logic_vector(2 downto 0)
 	);
 end instr_dec;
 
@@ -78,7 +79,7 @@ begin
 		end if;
 	end process;
 	
-	Dec_P:process(INSTR,OUTPUT_ALU1,instr_int)
+	Dec_P:process(INSTR,OUTPUT_ALU1,instr_int,rf_SREG_OUT)
 	begin
 		ProgMem_WEA				<= '0';
 		PC_TICK 					<= '1';
@@ -114,6 +115,15 @@ begin
 			db_ADDR					<= OUTPUT_ALU1;
 		elsif(INSTR(31 downto 29) = "011") then 			-- branch
 			rf_SREG_EN				<= '0';
+			if(rf_SREG_OUT(to_integer(unsigned(INSTR(25 downto 24))))=INSTR(26)) then
+				PC_EN_JMP				<= '1';
+				PC_TICK 					<= '0';
+				PC_JUMP					<= INSTR(ADDR_WIDTH-1 downto 0);
+			end if;
+			if(instr_int(31 downto 29) = "011") then
+				PC_EN_JMP 			<= '0';
+				PC_TICK 				<= '1';
+			end if;
 		elsif(INSTR(31 downto 24) = "11101111") then 	-- jump
 			rf_SREG_EN				<= '0';
 			PC_EN_JMP				<= '1';
