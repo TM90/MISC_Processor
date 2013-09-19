@@ -9,3 +9,5 @@ Todo:
 - Adding the last instructions
 - Adding a documentation
 - programming an assembler
+- choosing a bus
+- developing cores for the bus
