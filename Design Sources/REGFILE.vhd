@@ -42,7 +42,9 @@ entity reg_file is
 			OUTPUT_ALU0			: out std_logic_vector(31 downto 0);
 			OUTPUT_ALU1			: out std_logic_vector(31 downto 0);
 			OUTPUT_BYP			: out std_logic_vector(31 downto 0);
-			sreg_out				: out std_logic_vector(2 downto 0)
+			sreg_out				: out std_logic_vector(2 downto 0);
+			STACK_EN				: in std_logic;
+			STACK_DIR			: in std_logic
 			);
 end reg_file;
 
@@ -96,7 +98,14 @@ begin
 		elsif(rising_edge(CLK)) then
 			if(SREG_EN='1') then
 				sreg <= sreg or SREG_MASK or INPUT_SREG;
-		end if;
+			end if;
+			if(STACK_EN='1') then
+				if(STACK_DIR='1') then
+					reg_file_int(15)	<= std_logic_vector(unsigned(reg_file_int(15)) - "1"); 
+				else
+					reg_file_int(15)	<= std_logic_vector(unsigned(reg_file_int(15)) + "1");
+				end if;
+			end if;
 			if(IN_WR='1') then
 				reg_file_int(to_integer(unsigned(ADDR_IN)))	<=	input_int;
 				if(IN_MODE = "01") then

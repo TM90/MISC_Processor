@@ -57,7 +57,9 @@ entity instr_dec is
 		db_RD						: out std_logic;
 		ALU_MODE					: out std_logic_vector(2 downto 0); 
 		OUTPUT_ALU1				: in std_logic_vector(31 downto 0);
-		rf_SREG_OUT				: in std_logic_vector(2 downto 0)
+		RF_SREG_OUT				: in std_logic_vector(2 downto 0);
+		RF_STACK_EN				: out std_logic;
+		RF_STACK_DIR			: out std_logic
 	);
 end instr_dec;
 

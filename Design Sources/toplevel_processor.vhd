@@ -58,6 +58,8 @@ signal rf_addr_out0_int		: std_logic_vector(3 downto 0);
 signal rf_addr_out1_int		: std_logic_vector(3 downto 0);
 signal rf_input_id_int		: std_logic_vector(31 downto 0);
 signal rf_sreg_mask_int		: std_logic_vector(2 downto 0);
+signal rf_stack_en_int		: std_logic;
+signal rf_stack_dir_int		: std_logic;
 signal alu_mode_int			: std_logic_vector(2 downto 0);
 signal input_loop_int		: std_logic_vector(31 downto 0);
 signal input_sreg_int		: std_logic_vector(2 downto 0);
@@ -95,7 +97,9 @@ component instr_dec is
 		db_RD						: out std_logic;
 		ALU_MODE					: out std_logic_vector(2 downto 0); 
 		OUTPUT_ALU1				: in std_logic_vector(31 downto 0);
-		rf_SREG_OUT				: in std_logic_vector(2 downto 0)
+		RF_SREG_OUT				: in std_logic_vector(2 downto 0);
+		RF_STACK_EN				: out std_logic;
+		RF_STACK_DIR			: out std_logic
 	);
 end component;
 
@@ -120,7 +124,9 @@ component reg_file is
 			OUTPUT_ALU0			: out std_logic_vector(31 downto 0);
 			OUTPUT_ALU1			: out std_logic_vector(31 downto 0);
 			OUTPUT_BYP			: out std_logic_vector(31 downto 0);
-			SREG_OUT				: out std_logic_vector(2 downto 0)
+			SREG_OUT				: out std_logic_vector(2 downto 0);
+			STACK_EN				: in std_logic;
+			STACK_DIR			: in std_logic
 			);
 end component;
 
@@ -206,7 +212,9 @@ begin
 		db_RD 					=> RD,
 		ALU_MODE 				=> alu_mode_int, 
 		OUTPUT_ALU1				=> output_alu1_int,
-		rf_SREG_OUT				=> rf_sreg_out_int
+		rf_SREG_OUT				=> rf_sreg_out_int,
+		RF_STACK_EN				=> rf_stack_en_int,
+		RF_STACK_DIR			=> rf_stack_dir_int
 	);
 	
 	Inst_reg_file: reg_file 
@@ -230,7 +238,9 @@ begin
 		OUTPUT_ALU0 			=> output_alu0_int,
 		OUTPUT_ALU1 			=> output_alu1_int,
 		OUTPUT_BYP 				=> DATA,
-		SREG_OUT					=> rf_sreg_out_int
+		SREG_OUT					=> rf_sreg_out_int,
+		STACK_EN					=> rf_stack_en_int,
+		STACK_DIR				=> rf_stack_dir_int
 	);
 	
 	Inst_ALU: ALU 
