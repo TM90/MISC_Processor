@@ -40,7 +40,8 @@ entity instr_dec is
 		ProgMem_WEA				: out std_logic; 
 		PC_TICK					: out std_logic; 
 		PC_EN_JMP				: out std_logic; 
-		PC_JUMP					: out std_logic_vector(ADDR_WIDTH-1 downto 0); 
+		PC_JUMP					: out std_logic_vector(ADDR_WIDTH-1 downto 0);
+		PC_ADDRA					: in std_logic_vector(ADDR_WIDTH-1 downto 0);
 		rf_IN_WR					: out std_logic; 
 		rf_SREG_EN				: out std_logic; 
 		rf_SEL					: out std_logic; 
@@ -136,7 +137,14 @@ begin
 				PC_TICK 				<= '1';
 			end if;
 		elsif(INSTR(31 downto 24) = "11100000") then		-- call
-			rf_SREG_EN			<= '0';
+			rf_SREG_EN				<= '0';
+			PC_EN_JMP				<= '1';
+			PC_TICK 					<= '0';
+			PC_JUMP					<= INSTR(ADDR_WIDTH-1 downto 0);
+			if(instr_int(31 downto 24) = "11101111") then
+				PC_EN_JMP 			<= '0';
+				PC_TICK 				<= '1';
+			end if;
 		elsif(INSTR(31 downto 24) = "00000000" and INSTR(0)='1') then 	-- return
 			rf_SREG_EN			<= '0';
 		end if;

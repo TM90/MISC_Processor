@@ -80,7 +80,8 @@ component instr_dec is
 		ProgMem_WEA				: out std_logic; 
 		PC_TICK					: out std_logic; 
 		PC_EN_JMP				: out std_logic; 
-		PC_JUMP					: out std_logic_vector(ADDR_WIDTH-1 downto 0); 
+		PC_JUMP					: out std_logic_vector(ADDR_WIDTH-1 downto 0);
+		PC_ADDRA					: in std_logic_vector(ADDR_WIDTH-1 downto 0);		
 		rf_IN_WR					: out std_logic; 
 		rf_SREG_EN				: out std_logic; 
 		rf_SEL					: out std_logic; 
@@ -196,6 +197,7 @@ begin
 		PC_TICK 					=> pc_tick_int,
 		PC_EN_JMP				=> pc_en_jmp_int,
 		PC_JUMP 					=> pc_jump_int,
+		PC_ADDRA					=> pm_addr_int,
 		rf_IN_WR 				=> rf_in_wr_int,
 		rf_SREG_EN 				=> rf_sreg_en_int,
 		rf_SEL 					=> rf_sel_int,
