@@ -52,7 +52,7 @@ signal rf_in_wr_int			: std_logic;
 signal rf_sreg_en_int		: std_logic;
 signal rf_sel_int				: std_logic;
 signal rf_in_mode_int		: std_logic_vector(1 downto 0);
-signal rf_out_mode_int		: std_logic;
+signal rf_out_mode_int		: std_logic_vector(1 downto 0);
 signal rf_addr_in_int		: std_logic_vector(3 downto 0);
 signal rf_addr_out0_int		: std_logic_vector(3 downto 0);
 signal rf_addr_out1_int		: std_logic_vector(3 downto 0);
@@ -87,7 +87,7 @@ component instr_dec is
 		rf_SEL					: out std_logic; 
 		rf_MOD_SREG				: out std_logic;
 		rf_IN_MODE				: out std_logic_vector(1 downto 0); 
-		rf_OUT_MODE				: out std_logic; 
+		rf_OUT_MODE				: out std_logic_vector(1 downto 0); 
 		rf_ADDR_IN				: out std_logic_vector(3 downto 0); 
 		rf_ADDR_OUT0			: out std_logic_vector(3 downto 0); 
 		rf_ADDR_OUT1			: out std_logic_vector(3 downto 0); 
@@ -111,7 +111,7 @@ component reg_file is
 			IN_WR					: in std_logic;
 			SREG_EN				: in std_logic;
 			IN_MODE				: in std_logic_vector(1 downto 0);
-			OUT_MODE				: in std_logic;
+			OUT_MODE				: in std_logic_vector(1 downto 0);
 			SEL					: in std_logic;
 			MOD_SREG				: in std_logic;
 			ADDR_IN				: in std_logic_vector(3 downto 0);

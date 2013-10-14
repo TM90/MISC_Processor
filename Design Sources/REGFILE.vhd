@@ -28,7 +28,7 @@ entity reg_file is
 			IN_WR					: in std_logic;
 			SREG_EN				: in std_logic;
 			IN_MODE				: in std_logic_vector(1 downto 0);
-			OUT_MODE				: in std_logic;
+			OUT_MODE				: in std_logic_vector(1 downto 0);
 			SEL					: in std_logic;
 			MOD_SREG				: in std_logic;
 			ADDR_IN				: in std_logic_vector(3 downto 0);
@@ -71,17 +71,21 @@ begin
 		end case;
 	end process;
 	
-	OUT_MUX:process(OUT_MODE,input_int,reg_file_int,ADDR_OUT0,ADDR_OUT1) -- Output Multiplexer to select target and output address
+	OUT_MUX:process(OUT_MODE,input_int,reg_file_int,ADDR_OUT0,ADDR_OUT1,INPUT_INSTR_DEC) -- Output Multiplexer to select target and output address
 	begin
 		case OUT_MODE is 
-			when '0' =>
+			when "00" =>
 				OUTPUT_ALU0	<= reg_file_int(to_integer(unsigned((ADDR_OUT0))));
 				OUTPUT_ALU1	<= reg_file_int(to_integer(unsigned((ADDR_OUT1))));
 				OUTPUT_BYP  <= (others=>'0');
-			when '1' =>
+			when "01" =>
 				OUTPUT_BYP 	<= reg_file_int(to_integer(unsigned((ADDR_OUT0))));
 				OUTPUT_ALU0	<= (others=>'0');
 				OUTPUT_ALU1 <= reg_file_int(to_integer(unsigned((ADDR_OUT1))));
+			when "10" =>
+				OUTPUT_BYP 	<= INPUT_INSTR_DEC;
+				OUTPUT_ALU0	<= (others=>'0');
+				OUTPUT_ALU1	<= (others=>'0');
 			when others =>
 				OUTPUT_BYP 	<= reg_file_int(to_integer(unsigned((ADDR_OUT0))));
 				OUTPUT_ALU0	<= (others=>'0');

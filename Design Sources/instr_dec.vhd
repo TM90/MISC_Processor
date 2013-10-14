@@ -47,7 +47,7 @@ entity instr_dec is
 		rf_SEL					: out std_logic; 
 		rf_MOD_SREG				: out std_logic;
 		rf_IN_MODE				: out std_logic_vector(1 downto 0); 
-		rf_OUT_MODE				: out std_logic; 
+		rf_OUT_MODE				: out std_logic_vector(1 downto 0); 
 		rf_ADDR_IN				: out std_logic_vector(3 downto 0); 
 		rf_ADDR_OUT0			: out std_logic_vector(3 downto 0); 
 		rf_ADDR_OUT1			: out std_logic_vector(3 downto 0); 
@@ -69,10 +69,7 @@ architecture Behavioral of instr_dec is
 signal instr_int : std_logic_vector(31 downto 0);
 
 begin
-	rf_ADDR_IN		<= INSTR(27 downto 24);
-	rf_ADDR_OUT0	<= INSTR(23 downto 20);
-	rf_ADDR_OUT1	<= INSTR(19 downto 16);
-	
+
 	Pipeline:process(CLK,RST)
 	begin
 		if(RST='1') then
@@ -91,11 +88,16 @@ begin
 		rf_SREG_EN				<= '1';
 		rf_SEL					<= '0';
 		rf_IN_MODE 				<= INSTR(31 downto 30);
-		rf_OUT_MODE 			<= INSTR(29);
+		rf_OUT_MODE 			<= "0" & INSTR(29);
 		rf_IN_WR					<= INSTR(28);
 		ALU_MODE 				<= INSTR(14 downto 12);
 		rf_SREG_MASK			<= INSTR(11 downto 9);
 		rf_INPUT_INSTR_DEC 	<= (others=>'0');
+		rf_ADDR_IN				<= INSTR(27 downto 24);
+		rf_ADDR_OUT0			<= INSTR(23 downto 20);
+		rf_ADDR_OUT1			<= INSTR(19 downto 16);
+		RF_STACK_EN				<= '0';
+		RF_STACK_DIR			<= '0';
 		db_WR						<= '0';
 		db_RD 					<= '0';
 		db_ADDR					<= (others=>'0');
@@ -116,8 +118,7 @@ begin
 			rf_SREG_EN				<= '0';
 			db_WR						<= '1';
 			db_ADDR					<= OUTPUT_ALU1;
-		elsif(INSTR(31 downto 29) = "011") then 			-- branch
-			rf_SREG_EN				<= '0';
+		elsif(INSTR(31 downto 29)= "011") then -- branch
 			if(rf_SREG_OUT(to_integer(unsigned(INSTR(25 downto 24))))=INSTR(26)) then
 				PC_EN_JMP				<= '1';
 				PC_TICK 					<= '0';
@@ -141,9 +142,14 @@ begin
 			PC_EN_JMP				<= '1';
 			PC_TICK 					<= '0';
 			PC_JUMP					<= INSTR(ADDR_WIDTH-1 downto 0);
+			rf_out_mode				<= "10";
+			rf_ADDR_OUT1			<= "1111";
+			db_ADDR					<= OUTPUT_ALU1;
 			if(instr_int(31 downto 24) = "11101111") then
 				PC_EN_JMP 			<= '0';
 				PC_TICK 				<= '1';
+				RF_STACK_EN			<= '1';
+				RF_STACK_DIR		<= '1';
 			end if;
 		elsif(INSTR(31 downto 24) = "00000000" and INSTR(0)='1') then 	-- return
 			rf_SREG_EN			<= '0';
