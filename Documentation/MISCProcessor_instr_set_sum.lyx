@@ -160,7 +160,7 @@ add:
 \end_inset
 
 addc: 
-\begin_inset Formula $r_{d}\leftarrow r_{s2}+r_{s1}+C$
+\begin_inset Formula $r_{d}\leftarrow r_{s2}+r_{s1}+Carry$
 \end_inset
 
 
@@ -1145,7 +1145,7 @@ sub:
 \end_inset
 
 subc: 
-\begin_inset Formula $r_{d}\leftarrow r_{s2}-r_{s1}-C$
+\begin_inset Formula $r_{d}\leftarrow r_{s2}-r_{s1}-Carry$
 \end_inset
 
 

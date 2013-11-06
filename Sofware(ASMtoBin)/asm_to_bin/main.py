@@ -14,8 +14,11 @@ def ButtonHit():
         v.set(format(x,'#034b'))
     elif str[0] == "add":
         str[1]=str[1].split(",")
-        print int(str[1][0]),int(str[1][1]),int(str[1][2])
-        x = (1<<28)+(14<<8)
+        x = (1<<28)+((int(str[1][0])%16)<<24)+((int(str[1][1])%16)<<20)+((int(str[1][2])%16)<<16)+(14<<8)
+        v.set(format(x,'#034b'))
+    elif str[0] == "addc":
+        str[1]=str[1].split(",")
+        x = (1<<28)+((int(str[1][0])%16)<<24)+((int(str[1][1])%16)<<20)+((int(str[1][2])%16)<<16)+(1<<12)+(14<<8)
         v.set(format(x,'#034b'))
 root = Tk()
 e = Entry(root)
