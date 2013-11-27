@@ -40,6 +40,15 @@ def ButtonHit():
         str[1]=str[1].split(",")
         x = (1<<28)+((int(str[1][0])%16)<<24)+((int(str[1][1])%16)<<20)+((0)<<16)+(2<<12)+(14<<8)
         v.set(format(x,'#034b'))
+    elif str[0] == "call":
+        x = (14<<28)+int(str[1])%16777216
+        v.set(format(x,'#034b'))
+    elif str[0] == "jump":
+        x = (14<<28)+(15<<24)+int(str[1])%16777216
+        v.set(format(x,'#034b'))
+    elif str[0] == "return":
+        x = 1
+        v.set(format(x,'#034b'))
 root = Tk()
 e = Entry(root)
 v = StringVar()
