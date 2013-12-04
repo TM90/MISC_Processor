@@ -67,7 +67,7 @@ architecture rtl of ProgMem is
 			elsif(addr_pos=6) then
 				tmp(addr_pos) := "10010000000000010000000000000000"; -- in r0,r1	
 			elsif(addr_pos=7) then
-				tmp(addr_pos) := "11101111000000010000000000000000"; -- jmp 0x0000
+				tmp(addr_pos) := "11101111000000000000000000000000"; -- jump 0x0000
 			else
 				tmp(addr_pos) := std_logic_vector(to_unsigned(0, DATA_WIDTH));-- NOP
 			end if;

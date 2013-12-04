@@ -124,7 +124,7 @@ begin
 				PC_TICK 					<= '0';
 				PC_JUMP					<= INSTR(ADDR_WIDTH-1 downto 0);
 			end if;
-			if(instr_int(31 downto 29) = "011") then
+			if(instr_int(31 downto 0) = INSTR) then
 				PC_EN_JMP 			<= '0';
 				PC_TICK 				<= '1';
 			end if;
@@ -133,7 +133,7 @@ begin
 			PC_EN_JMP				<= '1';
 			PC_TICK 					<= '0';
 			PC_JUMP					<= INSTR(ADDR_WIDTH-1 downto 0);
-			if(instr_int(31 downto 24) = "11101111") then
+			if(instr_int(31 downto 0) = INSTR) then
 				PC_EN_JMP 			<= '0';
 				PC_TICK 				<= '1';
 			end if;
@@ -145,7 +145,7 @@ begin
 			rf_out_mode				<= "10";
 			rf_ADDR_OUT1			<= "1111";
 			db_ADDR					<= OUTPUT_ALU1;
-			if(instr_int(31 downto 24) = "11101111") then
+			if(instr_int(31 downto 0) = INSTR) then
 				PC_EN_JMP 			<= '0';
 				PC_TICK 				<= '1';
 				RF_STACK_EN			<= '1';
