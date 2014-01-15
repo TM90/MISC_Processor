@@ -70,12 +70,14 @@ signal instr_int : std_logic_vector(31 downto 0);
 
 begin
 
-	Pipeline:process(CLK,RST)
+	Pipeline:process(CLK)
 	begin
-		if(RST='1') then
-			instr_int <= (others => '0');
-		elsif(rising_edge(CLK)) then
-			instr_int <= INSTR;
+		if(rising_edge(CLK)) then
+		 	if (RST='1') then
+		 		instr_int <= (others => '0');
+		 	else
+		 		instr_int <= INSTR;
+		 	end if;
 		end if;
 	end process;
 	

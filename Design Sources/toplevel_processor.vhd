@@ -30,13 +30,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity toplevel_processor is
-	 generic (
-	 ProgMem_ADDR_WIDTH : integer := 10
-	 );
+	generic (
+		ProgMem_ADDR_WIDTH : integer := 10 
+	);
     Port ( CLK 	: in  STD_LOGIC;
            RST 	: in  STD_LOGIC;
            DATA 	: inout  STD_LOGIC_VECTOR (31 downto 0);
-			  ADDR	: out std_logic_vector(31 downto 0);
+			ADDR	: out std_logic_vector(31 downto 0);
            RD 		: out  STD_LOGIC;
            WR 		: out  STD_LOGIC);
 end toplevel_processor;

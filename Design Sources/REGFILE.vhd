@@ -93,36 +93,38 @@ begin
 		end case;
 	end process;
 	
-	ADDR_IN_P:process(CLK,RST) -- Select input address
+	ADDR_IN_P:process(CLK) -- Select input address
 	begin
-		if(RST='1') then 
-			for I in 0 to 15 loop
-				reg_file_int(I) <= (others=>'0');
-			end loop;
-		elsif(rising_edge(CLK)) then
-			if(SREG_EN='1') then
-				sreg <= sreg or SREG_MASK or INPUT_SREG;
-			end if;
-			if(STACK_EN='1') then
-				if(STACK_DIR='1') then
-					reg_file_int(15)	<= std_logic_vector(unsigned(reg_file_int(15)) - "1"); 
-				else
-					reg_file_int(15)	<= std_logic_vector(unsigned(reg_file_int(15)) + "1");
+		if(rising_edge(CLK)) then
+			if (RST='1') then
+				for I in 0 to 15 loop
+					reg_file_int(I) <= (others=>'0');
+				end loop;
+			else
+				if(SREG_EN='1') then
+					sreg <= sreg or SREG_MASK or INPUT_SREG;
 				end if;
-			end if;
-			if(IN_WR='1') then
-				reg_file_int(to_integer(unsigned(ADDR_IN)))	<=	input_int;
-				if(IN_MODE = "01") then
-					if (MOD_SREG = '1') then
-						sreg(to_integer(unsigned(ADDR_IN))) 	<= input_int(0); 
-					end if;
-					if(SEL='1') then
-						reg_file_int(to_integer(unsigned(ADDR_IN)))(31 downto 16)	<=	input_int(15 downto 0);
+				if(STACK_EN='1') then
+					if(STACK_DIR='1') then
+						reg_file_int(15)	<= std_logic_vector(unsigned(reg_file_int(15)) - "1"); 
 					else
-						reg_file_int(to_integer(unsigned(ADDR_IN)))(15 downto 0)		<=	input_int(15 downto 0);
+						reg_file_int(15)	<= std_logic_vector(unsigned(reg_file_int(15)) + "1");
 					end if;
 				end if;
-			end if;
+				if(IN_WR='1') then
+					reg_file_int(to_integer(unsigned(ADDR_IN)))	<=	input_int;
+					if(IN_MODE = "01") then
+						if (MOD_SREG = '1') then
+							sreg(to_integer(unsigned(ADDR_IN))) 	<= input_int(0); 
+						end if;
+						if(SEL='1') then
+							reg_file_int(to_integer(unsigned(ADDR_IN)))(31 downto 16)	<=	input_int(15 downto 0);
+						else
+							reg_file_int(to_integer(unsigned(ADDR_IN)))(15 downto 0)		<=	input_int(15 downto 0);
+						end if;
+					end if;
+				end if;	
+			end if; 
 		end if;
 	end process;
 end Behavioral;

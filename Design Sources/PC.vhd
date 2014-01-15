@@ -42,16 +42,18 @@ begin
 
 ADDRA <=std_logic_vector(pointer);
 
-Counter: process(CLK,RST)
+Counter: process(CLK)
 	begin
-		if(RST='1') then
-			pointer <=(others=>'0');
-		elsif(rising_edge(CLK)) then
-			if(TICK='1') then  -- count when PC_SET.tick is true
-				pointer <= pointer + "1"; 
-			end if;
-			if(EN_JMP='1') then -- for jump
-				pointer <= unsigned(JUMP);
+		if(rising_edge(CLK)) then
+			if (RST='1') then
+				pointer <=(others=>'0');
+			else
+				if(TICK='1') then  -- count when PC_SET.tick is true
+					pointer <= pointer + "1"; 
+				end if;
+				if(EN_JMP='1') then -- for jump
+					pointer <= unsigned(JUMP);
+				end if;
 			end if;
 		end if;
 	end process;
