@@ -46,6 +46,7 @@ type sreg_type is record
 	Zero  : std_logic;
 	Neg   : std_logic;
 	Carry : std_logic;
+	VFlag : std_logic;
 end record;
 
 signal sreg_int : sreg_type;
@@ -64,9 +65,11 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg  		<= ALU_OUT(31);
-				sreg_int.Carry 	<=	(IN_A_31 and IN_B_31) or
-											(not ALU_OUT(31) and IN_A_31) or
-											(not ALU_OUT(31) and IN_A_0);
+				sreg_int.VFlag <= (IN_A_31 and IN_B_31 and (not ALU_OUT(31)))  or
+									((not IN_A_31) and (not IN_B_31) and ALU_OUT(31));
+				sreg_int.Carry <= (IN_A_31 and IN_B_31) or
+									(not ALU_OUT(31) and IN_A_31) or
+									(not ALU_OUT(31) and IN_A_0);
 			when "000" => -- add
 				if(ALU_OUT = x"00000000") then
 					sreg_int.Zero 	<= '1';
@@ -74,9 +77,11 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
-				sreg_int.Carry 	<=	(IN_A_31 and IN_B_31) or
-											(not ALU_OUT(31) and IN_A_31) or
-											(not ALU_OUT(31) and IN_B_31);
+				sreg_int.VFlag <= (IN_A_31 and IN_B_31 and (not ALU_OUT(31)))  or
+									((not IN_A_31) and (not IN_B_31) and ALU_OUT(31));
+				sreg_int.Carry <= (IN_A_31 and IN_B_31) or
+									(not ALU_OUT(31) and IN_A_31) or
+									(not ALU_OUT(31) and IN_B_31);
 			when "111" => -- sub with carry
 				if(ALU_OUT = x"00000000") then
 					sreg_int.Zero 	<= '1';
@@ -84,9 +89,11 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
-				sreg_int.Carry 	<=	((not IN_A_31) and IN_B_31) or 
-											(IN_B_31 and ALU_OUT(31)) or 
-											(ALU_OUT(31) and (not IN_A_31));
+				sreg_int.VFlag <= (IN_A_31 and (not IN_B_31) and (not ALU_OUT(31)))  or
+									((not IN_A_31) and IN_B_31 and ALU_OUT(31));
+				sreg_int.Carry <= ((not IN_A_31) and IN_B_31) or 
+									(IN_B_31 and ALU_OUT(31)) or 
+									(ALU_OUT(31) and (not IN_A_31));
 			when "110" => -- sub
 				if(ALU_OUT = x"00000000") then
 					sreg_int.Zero 	<= '1';
@@ -94,16 +101,19 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
-				sreg_int.Carry 	<=	((not IN_A_31) and IN_B_31) or 
-											(IN_B_31 and ALU_OUT(31)) or 
-											(ALU_OUT(31) and (not IN_A_31));
+				sreg_int.VFlag <= (IN_A_31 and (not IN_B_31) and (not ALU_OUT(31)))  or
+									((not IN_A_31) and IN_B_31 and ALU_OUT(31));
+				sreg_int.Carry <= ((not IN_A_31) and IN_B_31) or 
+									(IN_B_31 and ALU_OUT(31)) or 
+									(ALU_OUT(31) and (not IN_A_31));
 			when "010" => -- slr
 				if(ALU_OUT = x"00000000") then
 					sreg_int.Zero 	<= '1';
 				else
 					sreg_int.Zero 	<= '0';
 				end if;
-				sreg_int.Neg 		<= ALU_OUT(31);
+				sreg_int.Neg 		<= '0';
+				sreg_int.VFlag		<= IN_A_0;
 				sreg_int.Carry		<= IN_A_0;
 			when "011" => -- or
 				if(ALU_OUT = x"00000000") then
@@ -112,6 +122,7 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
+				sreg_int.VFlag		<= '0'; 
 				sreg_int.Carry		<= '0';
 			when "100" => -- and
 				if(ALU_OUT = x"00000000") then
@@ -120,6 +131,7 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
+				sreg_int.VFlag		<= '0';
 				sreg_int.Carry		<= '0';
 			when "101" => -- xor
 				if(ALU_OUT = x"00000000") then
@@ -128,6 +140,7 @@ begin
 					sreg_int.Zero 	<= '0';
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
+				sreg_int.VFlag		<= '0';
 				sreg_int.Carry		<= '0';
 			when others => -- add
 				if(ALU_OUT = x"00000000") then
@@ -137,8 +150,10 @@ begin
 				end if;
 				sreg_int.Neg 		<= ALU_OUT(31);
 				sreg_int.Carry 	<=	(IN_A_31 and IN_B_31) or
-											(not ALU_OUT(31) and IN_A_31) or
-											(not ALU_OUT(31) and IN_B_31);
+									(not ALU_OUT(31) and IN_A_31) or
+									(not ALU_OUT(31) and IN_B_31);
+				sreg_int.VFlag <= (IN_A_31 and IN_B_31 and (not ALU_OUT(31)))  or
+									((not IN_A_31) and (not IN_B_31) and ALU_OUT(31));
 		end case;
 end process;
 
